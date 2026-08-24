@@ -14,6 +14,11 @@ export default function ConversionTracker({ leads, stages }) {
 
   const cards = [{ label: 'Total Outreach', value: funnel.total_outreach }, ...funnel.steps]
 
+  function pct(part, whole) {
+    if (!whole) return '0%'
+    return `${((part / whole) * 100).toFixed(1)}%`
+  }
+
   return (
     <div className="conversion-tracker">
       <div className="tracker-header">
@@ -45,6 +50,12 @@ export default function ConversionTracker({ leads, stages }) {
                   <div className="funnel-value">{card.value.toLocaleString()}</div>
                   <div className="funnel-label">{card.label}</div>
                   {card.stageName && <div className="funnel-substage">at/after "{card.stageName}"</div>}
+                  {i > 0 && (
+                    <div className="funnel-pct">
+                      <span className="funnel-pct-total">{pct(card.value, cards[0].value)} of total</span>
+                      <span className="funnel-pct-prev">{pct(card.value, cards[i - 1].value)} from prev</span>
+                    </div>
+                  )}
                 </div>
                 {i < cards.length - 1 && <span className="funnel-arrow">→</span>}
               </div>
