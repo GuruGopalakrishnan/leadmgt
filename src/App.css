@@ -245,7 +245,8 @@
 
 /* Stage badge */
 
-.stage-badge {
+.stage-badge,
+.level-badge {
   display: inline-block;
   font-size: 12px;
   font-weight: 600;

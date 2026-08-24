@@ -1,9 +1,24 @@
 import { useMemo } from 'react'
 import { usePreviousStageDistribution } from '../hooks/usePreviousStageDistribution'
 
-function pct(part, whole) {
-  if (!whole) return '0%'
-  return `${((part / whole) * 100).toFixed(1)}%`
+function rawPct(part, whole) {
+  return whole ? (part / whole) * 100 : 0
+}
+
+function fmtPct(value) {
+  return `${value.toFixed(1)}%`
+}
+
+const BRONZE = { label: 'Bronze', color: '#b45309' }
+const SILVER = { label: 'Silver', color: '#94a3b8' }
+const GOLD = { label: 'Gold', color: '#eab308' }
+const DIAMOND = { label: 'Diamond', color: '#38bdf8' }
+
+function levelFor(percent) {
+  if (percent < 20) return BRONZE
+  if (percent < 40) return SILVER
+  if (percent <= 75) return GOLD
+  return DIAMOND
 }
 
 const HIGHLIGHTS = [
@@ -27,12 +42,15 @@ export default function StageBreakdown({ leads, stages }) {
       const count = leads.filter((l) => l.stage_id === stage.id).length
       const prevCount = previous.byStage[stage.id] || 0
       const change = count - prevCount
+      const percent = rawPct(count, total)
       return {
         stage,
         count,
-        percent: pct(count, total),
+        percent,
+        percentLabel: fmtPct(percent),
+        level: levelFor(percent),
         prevCount,
-        prevPercent: pct(prevCount, previous.total),
+        prevPercent: fmtPct(rawPct(prevCount, previous.total)),
         change,
       }
     })
@@ -48,6 +66,7 @@ export default function StageBreakdown({ leads, stages }) {
             <th>Stage</th>
             <th>Number</th>
             <th>% of Total</th>
+            <th>Level</th>
             <th>Previous Week</th>
             <th>Change</th>
           </tr>
@@ -64,7 +83,15 @@ export default function StageBreakdown({ leads, stages }) {
                   {row.stage.name}
                 </td>
                 <td>{row.count}</td>
-                <td>{row.percent}</td>
+                <td>{row.percentLabel}</td>
+                <td>
+                  <span
+                    className="level-badge"
+                    style={{ color: row.level.color, background: `${row.level.color}1a`, borderColor: `${row.level.color}55` }}
+                  >
+                    {row.level.label}
+                  </span>
+                </td>
                 <td>
                   {row.prevCount} <span className="muted">({row.prevPercent})</span>
                 </td>
