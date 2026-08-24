@@ -385,6 +385,19 @@
   font-size: 16px;
 }
 
+.dashboard-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+@media (max-width: 960px) {
+  .dashboard-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
 .stage-change {
   font-weight: 600;
   font-size: 13px;
