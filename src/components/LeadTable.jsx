@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import PhonesCell from './PhonesCell'
+import EmailsCell from './EmailsCell'
 import LinksCell from './LinksCell'
+import NicheCell from './NicheCell'
 import SourceCell from './SourceCell'
 import StageCell from './StageCell'
 import ReminderCell from './ReminderCell'
@@ -86,7 +88,9 @@ export default function LeadTable({
             <tr>
               <th>Name</th>
               <th>Phone Numbers</th>
+              <th>Email</th>
               <th>Other Links</th>
+              <th>Niche/Industry</th>
               <th>Source</th>
               <th>Stage</th>
               <th>Reminder</th>
@@ -101,7 +105,13 @@ export default function LeadTable({
                   <PhonesCell lead={lead} onSave={onQuickUpdate} />
                 </td>
                 <td>
+                  <EmailsCell lead={lead} onSave={onQuickUpdate} />
+                </td>
+                <td>
                   <LinksCell lead={lead} onSave={onQuickUpdate} />
+                </td>
+                <td>
+                  <NicheCell lead={lead} onSave={onQuickUpdate} />
                 </td>
                 <td>
                   <SourceCell lead={lead} onSave={onQuickUpdate} />
@@ -124,7 +134,7 @@ export default function LeadTable({
             ))}
             {!loading && leads.length === 0 && (
               <tr>
-                <td colSpan={7} className="no-results">
+                <td colSpan={9} className="no-results">
                   No leads match your filters.
                 </td>
               </tr>

@@ -12,7 +12,9 @@ function toFormState(lead, stages) {
     reminder_time: lead?.reminder_time || '',
     reminder_note: lead?.reminder_note || '',
     phones: lead?.phones?.length ? [...lead.phones] : [''],
+    emails: lead?.emails?.length ? [...lead.emails] : [''],
     links: lead?.links?.length ? lead.links.map((l) => ({ type: l.type, url: l.url })) : [{ type: LINK_TYPES[0], url: '' }],
+    niche: lead?.niche || '',
   }
 }
 
@@ -34,6 +36,18 @@ export default function LeadForm({ lead, stages, onSave, onClose }) {
 
   function removePhone(i) {
     setForm((prev) => ({ ...prev, phones: prev.phones.filter((_, idx) => idx !== i) }))
+  }
+
+  function setEmail(i, value) {
+    setForm((prev) => ({ ...prev, emails: prev.emails.map((em, idx) => (idx === i ? value : em)) }))
+  }
+
+  function addEmail() {
+    setForm((prev) => ({ ...prev, emails: [...prev.emails, ''] }))
+  }
+
+  function removeEmail(i) {
+    setForm((prev) => ({ ...prev, emails: prev.emails.filter((_, idx) => idx !== i) }))
   }
 
   function setLink(i, field, value) {
@@ -66,7 +80,9 @@ export default function LeadForm({ lead, stages, onSave, onClose }) {
       reminder_time: form.reminder_date ? form.reminder_time || null : null,
       reminder_note: form.reminder_note || null,
       phones: form.phones.map((p) => p.trim()).filter(Boolean),
+      emails: form.emails.map((em) => em.trim()).filter(Boolean),
       links: form.links.map((l) => ({ type: l.type, url: l.url.trim() })).filter((l) => l.url),
+      niche: form.niche.trim() || null,
     })
   }
 
@@ -110,6 +126,28 @@ export default function LeadForm({ lead, stages, onSave, onClose }) {
           </fieldset>
 
           <fieldset className="form-fieldset">
+            <legend>Emails</legend>
+            {form.emails.map((email, i) => (
+              <div className="dynamic-row" key={i}>
+                <input
+                  type="email"
+                  placeholder="e.g. name@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(i, e.target.value)}
+                />
+                {form.emails.length > 1 && (
+                  <button type="button" className="btn-icon" onClick={() => removeEmail(i)} aria-label="Remove email">
+                    ×
+                  </button>
+                )}
+              </div>
+            ))}
+            <button type="button" className="btn-link" onClick={addEmail}>
+              + Add another email
+            </button>
+          </fieldset>
+
+          <fieldset className="form-fieldset">
             <legend>Links</legend>
             {form.links.map((link, i) => (
               <div className="dynamic-row" key={i}>
@@ -137,6 +175,16 @@ export default function LeadForm({ lead, stages, onSave, onClose }) {
               + Add another link
             </button>
           </fieldset>
+
+          <label>
+            Niche / Industry
+            <input
+              type="text"
+              value={form.niche}
+              onChange={(e) => set('niche', e.target.value)}
+              placeholder="e.g. Real Estate, Dental, SaaS"
+            />
+          </label>
 
           <div className="form-row">
             <label>

@@ -279,6 +279,7 @@
 }
 
 .phone-chip,
+.email-chip,
 .link-chip {
   font: inherit;
   font-size: 12px;
@@ -300,6 +301,20 @@
 
 .phone-chip:hover {
   border-color: #25d366;
+}
+
+.email-chip {
+  color: #2f7bd4;
+  background: #2f7bd41a;
+  border-color: #2f7bd455;
+  display: inline-block;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.email-chip:hover {
+  border-color: #2f7bd4;
 }
 
 .link-chip {
@@ -678,7 +693,8 @@
 }
 
 .inline-select,
-.inline-source-input {
+.inline-source-input,
+.inline-text-input {
   font: inherit;
   font-size: 13.5px;
   padding: 6px 8px;

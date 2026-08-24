@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { toCSV } from '../utils/csv'
 import { DEFAULT_SOURCES } from '../utils/constants'
 
-const HEADERS = ['Name', 'Phone Number', 'Other Links', 'Source']
+const HEADERS = ['Name', 'Phone Number', 'Email', 'Other Links', 'Niche/Industry', 'Source']
 
 function linksToCell(links) {
   return (links || []).map((l) => `${l.type}:${l.url}`).join(';')
@@ -33,7 +33,9 @@ export default function ExportDialog({ leads, stages, onClose }) {
     const rows = filtered.map((lead) => [
       lead.name,
       (lead.phones || []).join(';'),
+      (lead.emails || []).join(';'),
       linksToCell(lead.links),
+      lead.niche || '',
       lead.source || '',
     ])
     const csv = toCSV(HEADERS, rows)

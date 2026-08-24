@@ -58,6 +58,12 @@ async function init() {
       number TEXT NOT NULL
     );
 
+    CREATE TABLE IF NOT EXISTS emails (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      lead_id INTEGER NOT NULL REFERENCES leads(id) ON DELETE CASCADE,
+      email TEXT NOT NULL
+    );
+
     CREATE TABLE IF NOT EXISTS links (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       lead_id INTEGER NOT NULL REFERENCES leads(id) ON DELETE CASCADE,
@@ -74,6 +80,12 @@ async function init() {
 
     CREATE INDEX IF NOT EXISTS idx_stage_history_lead ON stage_history(lead_id, changed_at);
   `)
+
+  try {
+    await db.execute('ALTER TABLE leads ADD COLUMN niche TEXT')
+  } catch (err) {
+    if (!/duplicate column/i.test(err.message)) throw err
+  }
 
   const stageCount = (await db.execute('SELECT COUNT(*) AS n FROM stages')).rows[0].n
   if (stageCount === 0) {

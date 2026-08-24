@@ -4,7 +4,9 @@ import { LINK_TYPES } from '../utils/constants'
 const TARGET_FIELDS = [
   { key: 'name', label: 'Name', required: true, guesses: ['name'] },
   { key: 'phone', label: 'Phone Number', required: false, guesses: ['phone number', 'phone', 'phone numbers'] },
+  { key: 'email', label: 'Email', required: false, guesses: ['email', 'emails', 'email address'] },
   { key: 'links', label: 'Other Links', required: false, guesses: ['other links', 'links', 'link'] },
+  { key: 'niche', label: 'Niche/Industry', required: false, guesses: ['niche', 'industry', 'niche/industry', 'niche / industry'] },
   { key: 'source', label: 'Source', required: false, guesses: ['source'] },
 ]
 
@@ -16,6 +18,11 @@ function guessColumn(headerRow, guesses) {
 function cellToPhones(cell) {
   if (!cell) return []
   return cell.split(';').map((p) => p.trim()).filter(Boolean)
+}
+
+function cellToEmails(cell) {
+  if (!cell) return []
+  return cell.split(';').map((e) => e.trim()).filter(Boolean)
 }
 
 function cellToLinks(cell) {
@@ -46,7 +53,9 @@ export default function ImportPreviewModal({ headerRow, dataRows, onCancel, onCo
     return dataRows.map((row) => ({
       name: idx('name') !== -1 ? (row[idx('name')] || '').trim() : '',
       phones: idx('phone') !== -1 ? cellToPhones(row[idx('phone')]) : [],
+      emails: idx('email') !== -1 ? cellToEmails(row[idx('email')]) : [],
       links: idx('links') !== -1 ? cellToLinks(row[idx('links')]) : [],
+      niche: idx('niche') !== -1 ? row[idx('niche')] || null : null,
       source: idx('source') !== -1 ? row[idx('source')] || null : null,
     }))
   }, [dataRows, columnMap])
@@ -107,7 +116,9 @@ export default function ImportPreviewModal({ headerRow, dataRows, onCancel, onCo
                 <tr>
                   <th>Name</th>
                   <th>Phone Numbers</th>
+                  <th>Email</th>
                   <th>Other Links</th>
+                  <th>Niche/Industry</th>
                   <th>Source</th>
                 </tr>
               </thead>
@@ -116,7 +127,9 @@ export default function ImportPreviewModal({ headerRow, dataRows, onCancel, onCo
                   <tr key={i} className={row.name ? '' : 'import-row-skipped'}>
                     <td className="lead-name-cell">{row.name || <span className="muted">(no name — skipped)</span>}</td>
                     <td>{row.phones.join(', ') || <span className="muted">—</span>}</td>
+                    <td>{row.emails.join(', ') || <span className="muted">—</span>}</td>
                     <td>{row.links.map((l) => l.url).join(', ') || <span className="muted">—</span>}</td>
+                    <td>{row.niche || <span className="muted">—</span>}</td>
                     <td>{row.source || <span className="muted">—</span>}</td>
                   </tr>
                 ))}
