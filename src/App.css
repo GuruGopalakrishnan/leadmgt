@@ -331,43 +331,6 @@
   margin-top: 10px;
 }
 
-.dashboard-recent h2 {
-  margin-bottom: 14px;
-  font-size: 16px;
-}
-
-.recent-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.recent-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 13px 18px;
-}
-
-.recent-item + .recent-item {
-  border-top: 1px solid var(--border);
-}
-
-.recent-name {
-  color: var(--text-h);
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.recent-company {
-  font-size: 12.5px;
-  margin-top: 1px;
-}
-
 .empty-hint {
   font-size: 14px;
 }

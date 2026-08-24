@@ -1,5 +1,4 @@
 import { useMemo } from 'react'
-import StageBadge from './StageBadge'
 import ConversionTracker from './ConversionTracker'
 
 export default function Dashboard({ leads, stages, onNavigate }) {
@@ -15,11 +14,6 @@ export default function Dashboard({ leads, stages, onNavigate }) {
     }
     return { byStage, noReminder, todayCount, total: leads.length }
   }, [leads, stages])
-
-  const recent = useMemo(
-    () => [...leads].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 5),
-    [leads],
-  )
 
   return (
     <div className="dashboard">
@@ -43,25 +37,6 @@ export default function Dashboard({ leads, stages, onNavigate }) {
             <div className="stat-label">{s.name}</div>
           </div>
         ))}
-      </div>
-
-      <div className="dashboard-recent">
-        <h2>Recent Leads</h2>
-        {recent.length === 0 ? (
-          <p className="empty-hint">No leads yet. Add your first lead to get started.</p>
-        ) : (
-          <ul className="recent-list">
-            {recent.map((lead) => (
-              <li key={lead.id} className="recent-item">
-                <div>
-                  <div className="recent-name">{lead.name}</div>
-                  <div className="recent-company">{lead.source}</div>
-                </div>
-                <StageBadge name={stages.find((s) => s.id === lead.stage_id)?.name} />
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
 
       <ConversionTracker leads={leads} stages={stages} />
