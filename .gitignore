@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Local secrets (Turso credentials, etc.) — never commit this
+.env
+
 # SQLite database
 server/*.db
 server/*.db-shm
