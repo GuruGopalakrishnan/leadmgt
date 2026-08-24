@@ -9,7 +9,7 @@ const TABS = [
 export default function Header({ activeTab, onTabChange, onAddLead, notifyPermission, onEnableNotify }) {
   return (
     <header className="app-header">
-      <h1 className="app-title">Lead Manager</h1>
+      <h1 className="app-title">DAS</h1>
       <nav className="app-nav">
         {TABS.map((tab) => (
           <button

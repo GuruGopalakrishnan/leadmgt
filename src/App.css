@@ -161,13 +161,13 @@
 }
 
 .phone-chip {
-  color: #16a34a;
-  background: #16a34a1a;
-  border-color: #16a34a55;
+  color: #25d366;
+  background: #25d3661a;
+  border-color: #25d36655;
 }
 
 .phone-chip:hover {
-  border-color: #16a34a;
+  border-color: #25d366;
 }
 
 .link-chip {
