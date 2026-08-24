@@ -13,8 +13,9 @@ export default function LinkChips({ links }) {
           target="_blank"
           rel="noreferrer"
           className="link-chip"
+          title={`${link.type}: ${link.url}`}
         >
-          {link.type}
+          {link.url}
         </a>
       ))}
     </div>
