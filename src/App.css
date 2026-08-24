@@ -30,7 +30,7 @@
   height: 30px;
   border-radius: 8px;
   background: var(--accent);
-  color: #fff;
+  color: var(--bg);
   font-weight: 800;
   font-size: 15px;
   display: flex;
@@ -179,7 +179,7 @@
 
 .btn-primary {
   background: var(--accent);
-  color: #fff;
+  color: var(--bg);
 }
 
 .btn-primary:hover {
