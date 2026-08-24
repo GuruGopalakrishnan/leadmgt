@@ -9,12 +9,3 @@ export const FOLLOWUP_FILTERS = [
   { value: 'upcoming', label: 'Upcoming' },
   { value: 'none', label: 'No reminder' },
 ]
-
-export function formatReminder(date, time) {
-  if (!date) return null
-  const d = new Date(`${date}T${time || '00:00'}`)
-  const dateStr = d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })
-  if (!time) return dateStr
-  const timeStr = d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })
-  return `${dateStr} – ${timeStr}`
-}

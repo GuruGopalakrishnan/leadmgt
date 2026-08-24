@@ -3,7 +3,8 @@ import PhonesCell from './PhonesCell'
 import LinksCell from './LinksCell'
 import SourceCell from './SourceCell'
 import StageCell from './StageCell'
-import { DEFAULT_SOURCES, FOLLOWUP_FILTERS, formatReminder } from '../utils/constants'
+import ReminderCell from './ReminderCell'
+import { DEFAULT_SOURCES, FOLLOWUP_FILTERS } from '../utils/constants'
 
 export default function LeadTable({ leads, loading, stages, filters, onFilterChange, onEdit, onDelete, onQuickUpdate }) {
   const [search, setSearch] = useState(filters.search || '')
@@ -95,7 +96,7 @@ export default function LeadTable({ leads, loading, stages, filters, onFilterCha
                   <StageCell lead={lead} stages={stages} onSave={onQuickUpdate} />
                 </td>
                 <td>
-                  {formatReminder(lead.reminder_date, lead.reminder_time) || <span className="muted">—</span>}
+                  <ReminderCell lead={lead} onSave={onQuickUpdate} />
                 </td>
                 <td className="row-actions">
                   <button type="button" className="btn-link" onClick={() => onEdit(lead)}>

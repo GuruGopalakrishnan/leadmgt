@@ -437,6 +437,15 @@
   flex-wrap: wrap;
 }
 
+.reminder-note-text {
+  display: inline-block;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
 .icon-btn-sm {
   font-size: 12px;
   line-height: 1;
@@ -475,8 +484,8 @@
   white-space: normal;
 }
 
-.cell-popover .dynamic-row input,
-.cell-popover .dynamic-row select {
+.cell-popover input,
+.cell-popover select {
   font: inherit;
   font-size: 14px;
   padding: 6px 8px;
@@ -484,6 +493,16 @@
   border: 1px solid var(--border);
   background: var(--bg);
   color: var(--text-h);
+  box-sizing: border-box;
+}
+
+.cell-popover label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text);
+  flex: 1;
 }
 
 .cell-popover-actions {
