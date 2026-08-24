@@ -950,6 +950,24 @@
   gap: 14px;
 }
 
+.form-static-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.form-static-label {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.form-static-value {
+  color: var(--text-h);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
 .form-actions {
   display: flex;
   justify-content: flex-end;

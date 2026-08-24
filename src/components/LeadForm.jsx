@@ -15,13 +15,18 @@ function toFormState(lead, stages) {
     emails: lead?.emails?.length ? [...lead.emails] : [''],
     links: lead?.links?.length ? lead.links.map((l) => ({ type: l.type, url: l.url })) : [{ type: LINK_TYPES[0], url: '' }],
     niche: lead?.niche || '',
-    created_at: (lead?.created_at || new Date().toISOString()).slice(0, 10),
   }
+}
+
+function formatDate(iso) {
+  const [y, m, d] = iso.slice(0, 10).split('-')
+  return `${d}-${m}-${y}`
 }
 
 export default function LeadForm({ lead, stages, onSave, onClose }) {
   const [form, setForm] = useState(() => toFormState(lead, stages))
   const [error, setError] = useState('')
+  const createdAt = lead?.created_at || new Date().toISOString()
 
   function set(field, value) {
     setForm((prev) => ({ ...prev, [field]: value }))
@@ -73,7 +78,6 @@ export default function LeadForm({ lead, stages, onSave, onClose }) {
       return
     }
     const source = form.source === 'Other' ? form.customSource.trim() : form.source
-    const originalIso = lead?.created_at || new Date().toISOString()
     onSave({
       name: form.name.trim(),
       source: source || null,
@@ -85,7 +89,7 @@ export default function LeadForm({ lead, stages, onSave, onClose }) {
       emails: form.emails.map((em) => em.trim()).filter(Boolean),
       links: form.links.map((l) => ({ type: l.type, url: l.url.trim() })).filter((l) => l.url),
       niche: form.niche.trim() || null,
-      created_at: form.created_at ? `${form.created_at}${originalIso.slice(10)}` : originalIso,
+      created_at: createdAt,
     })
   }
 
@@ -253,10 +257,10 @@ export default function LeadForm({ lead, stages, onSave, onClose }) {
             </label>
           </fieldset>
 
-          <label>
-            Created On
-            <input type="date" value={form.created_at} onChange={(e) => set('created_at', e.target.value)} />
-          </label>
+          <div className="form-static-row">
+            <span className="form-static-label">Created On</span>
+            <span className="form-static-value">{formatDate(createdAt)}</span>
+          </div>
 
           <div className="form-actions">
             <button type="button" className="btn-secondary" onClick={onClose}>
