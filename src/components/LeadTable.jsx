@@ -4,9 +4,20 @@ import LinksCell from './LinksCell'
 import SourceCell from './SourceCell'
 import StageCell from './StageCell'
 import ReminderCell from './ReminderCell'
+import ImportExportBar from './ImportExportBar'
 import { DEFAULT_SOURCES, FOLLOWUP_FILTERS } from '../utils/constants'
 
-export default function LeadTable({ leads, loading, stages, filters, onFilterChange, onEdit, onDelete, onQuickUpdate }) {
+export default function LeadTable({
+  leads,
+  loading,
+  stages,
+  filters,
+  onFilterChange,
+  onEdit,
+  onDelete,
+  onQuickUpdate,
+  onImported,
+}) {
   const [search, setSearch] = useState(filters.search || '')
 
   function submitSearch(e) {
@@ -16,6 +27,8 @@ export default function LeadTable({ leads, loading, stages, filters, onFilterCha
 
   return (
     <div className="leads-panel">
+      <ImportExportBar leads={leads} onImported={onImported} />
+
       <form className="filters-bar" onSubmit={submitSearch}>
         <input
           type="search"

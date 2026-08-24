@@ -21,7 +21,14 @@ function App() {
 
   const { stages, addStage, renameStage, deleteStage, reorderStages } = useStages()
   const { leads: allLeads, refetch: refetchAll } = useLeads({})
-  const { leads: filteredLeads, loading, addLead, updateLead, deleteLead } = useLeads(filters)
+  const {
+    leads: filteredLeads,
+    loading,
+    addLead,
+    updateLead,
+    deleteLead,
+    refetch: refetchFiltered,
+  } = useLeads(filters)
   const { permission, requestPermission } = useReminderNotifications()
 
   function openAddForm() {
@@ -57,6 +64,11 @@ function App() {
 
   async function handleQuickUpdate(updatedLead) {
     await updateLead(updatedLead.id, updatedLead)
+    refetchAll()
+  }
+
+  function handleImported() {
+    refetchFiltered()
     refetchAll()
   }
 
@@ -105,6 +117,7 @@ function App() {
               onEdit={openEditForm}
               onDelete={handleDelete}
               onQuickUpdate={handleQuickUpdate}
+              onImported={handleImported}
             />
           )}
 

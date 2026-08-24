@@ -504,6 +504,17 @@
   gap: 16px;
 }
 
+.import-export-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.import-status {
+  font-size: 13px;
+  color: var(--text);
+}
+
 .filters-bar {
   display: flex;
   gap: 10px;

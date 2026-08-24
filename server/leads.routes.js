@@ -165,6 +165,37 @@ router.post('/', (req, res) => {
   res.status(201).json(attachPhonesAndLinks(lead))
 })
 
+router.post('/import', (req, res) => {
+  const { rows } = req.body
+  if (!Array.isArray(rows)) return res.status(400).json({ error: 'rows must be an array.' })
+
+  const insertLead = db.prepare(
+    `INSERT INTO leads (name, source, stage_id, reminder_date, reminder_time, reminder_note, reminder_notified, created_at, updated_at)
+     VALUES (?, ?, NULL, NULL, NULL, NULL, 0, ?, ?)`,
+  )
+
+  let created = 0
+  const errors = []
+
+  const importAll = db.transaction((entries) => {
+    entries.forEach((entry, i) => {
+      const name = (entry.name || '').trim()
+      if (!name) {
+        errors.push({ row: i + 1, message: 'Missing name.' })
+        return
+      }
+      const now = new Date().toISOString()
+      const info = insertLead.run(name, entry.source || null, now, now)
+      saveContacts(info.lastInsertRowid, entry.phones, entry.links)
+      logStageChange(info.lastInsertRowid, null, now)
+      created += 1
+    })
+  })
+  importAll(rows)
+
+  res.status(201).json({ created, errors })
+})
+
 router.put('/:id', (req, res) => {
   const existing = db.prepare('SELECT * FROM leads WHERE id = ?').get(req.params.id)
   if (!existing) return res.status(404).json({ error: 'Lead not found.' })

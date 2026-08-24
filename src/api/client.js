@@ -25,6 +25,7 @@ export const api = {
   updateLead: (id, data) => request(`/leads/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   deleteLead: (id) => request(`/leads/${id}`, { method: 'DELETE' }),
   markNotified: (id) => request(`/leads/${id}/notified`, { method: 'POST' }),
+  importLeads: (rows) => request('/leads/import', { method: 'POST', body: JSON.stringify({ rows }) }),
 
   getStages: () => request('/stages'),
   createStage: (name) => request('/stages', { method: 'POST', body: JSON.stringify({ name }) }),
