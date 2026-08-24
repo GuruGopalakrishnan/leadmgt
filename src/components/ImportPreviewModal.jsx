@@ -78,25 +78,28 @@ export default function ImportPreviewModal({ headerRow, dataRows, onCancel, onCo
             Match each column below, then import.
           </p>
 
-          <div className="column-map-grid">
-            {TARGET_FIELDS.map((field) => (
-              <label key={field.key}>
-                {field.label}
-                {field.required && ' *'}
-                <select
-                  value={columnMap[field.key]}
-                  onChange={(e) => setColumnMap((prev) => ({ ...prev, [field.key]: e.target.value }))}
-                >
-                  <option value="">Not in document</option>
-                  {headerRow.map((h, i) => (
-                    <option key={i} value={i}>
-                      {h || `Column ${i + 1}`}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            ))}
-          </div>
+          <fieldset className="form-fieldset export-filters">
+            <legend>Column mapping</legend>
+            <div className="column-map-grid">
+              {TARGET_FIELDS.map((field) => (
+                <label key={field.key}>
+                  {field.label}
+                  {field.required && ' *'}
+                  <select
+                    value={columnMap[field.key]}
+                    onChange={(e) => setColumnMap((prev) => ({ ...prev, [field.key]: e.target.value }))}
+                  >
+                    <option value="">Not in document</option>
+                    {headerRow.map((h, i) => (
+                      <option key={i} value={i}>
+                        {h || `Column ${i + 1}`}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              ))}
+            </div>
+          </fieldset>
 
           <div className="import-preview-table-wrap">
             <table className="leads-table">
@@ -122,10 +125,13 @@ export default function ImportPreviewModal({ headerRow, dataRows, onCancel, onCo
             {mappedRows.length > 8 && <p className="import-preview-more">+ {mappedRows.length - 8} more row(s)</p>}
           </div>
 
-          <p className="import-summary">
-            {validCount} will be imported.
-            {skippedCount > 0 && ` ${skippedCount} row(s) skipped (no name).`}
-          </p>
+          <div className="export-summary-banner">
+            <span className="export-summary-count">{validCount}</span>
+            <span>
+              contact{validCount === 1 ? '' : 's'} will be imported
+              {skippedCount > 0 && ` · ${skippedCount} skipped (no name)`}
+            </span>
+          </div>
 
           <div className="form-actions">
             <button type="button" className="btn-secondary" onClick={onCancel}>

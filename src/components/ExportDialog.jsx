@@ -57,46 +57,53 @@ export default function ExportDialog({ leads, stages, onClose }) {
           </button>
         </div>
         <div className="import-preview-body">
-          <div className="form-row">
-            <label>
-              From date
-              <input type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
-            </label>
-            <label>
-              To date
-              <input type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} />
-            </label>
-          </div>
-          <div className="form-row">
-            <label>
-              Stage
-              <select value={stageId} onChange={(e) => setStageId(e.target.value)}>
-                <option value="">All stages</option>
-                {stages.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label>
-              Source
-              <select value={source} onChange={(e) => setSource(e.target.value)}>
-                <option value="">All sources</option>
-                {DEFAULT_SOURCES.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
-                  </option>
-                ))}
-                <option value="Other">Other</option>
-              </select>
-            </label>
-          </div>
+          <fieldset className="form-fieldset export-filters">
+            <legend>Filter by date</legend>
+            <div className="form-row">
+              <label>
+                From date
+                <input type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
+              </label>
+              <label>
+                To date
+                <input type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} />
+              </label>
+            </div>
+          </fieldset>
 
-          <p className="import-summary">
-            {filtered.length} lead{filtered.length === 1 ? '' : 's'} match{filtered.length === 1 ? 'es' : ''} these
-            filters.
-          </p>
+          <fieldset className="form-fieldset export-filters">
+            <legend>Filter by pipeline</legend>
+            <div className="form-row">
+              <label>
+                Stage
+                <select value={stageId} onChange={(e) => setStageId(e.target.value)}>
+                  <option value="">All stages</option>
+                  {stages.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                Source
+                <select value={source} onChange={(e) => setSource(e.target.value)}>
+                  <option value="">All sources</option>
+                  {DEFAULT_SOURCES.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                  <option value="Other">Other</option>
+                </select>
+              </label>
+            </div>
+          </fieldset>
+
+          <div className="export-summary-banner">
+            <span className="export-summary-count">{filtered.length}</span>
+            <span>lead{filtered.length === 1 ? '' : 's'} match{filtered.length === 1 ? 'es' : ''} these filters</span>
+          </div>
 
           <div className="form-actions">
             <button type="button" className="btn-secondary" onClick={onClose}>
