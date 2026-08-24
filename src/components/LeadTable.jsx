@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import PhonesCell from './PhonesCell'
 import EmailsCell from './EmailsCell'
 import LinksCell from './LinksCell'
@@ -22,11 +22,21 @@ export default function LeadTable({
   onImported,
 }) {
   const [search, setSearch] = useState(filters.search || '')
+  const [pageSize, setPageSize] = useState(25)
+  const [page, setPage] = useState(1)
 
   function submitSearch(e) {
     e.preventDefault()
     onFilterChange({ ...filters, search })
   }
+
+  useEffect(() => {
+    setPage(1)
+  }, [filters, leads.length, pageSize])
+
+  const totalPages = Math.max(1, Math.ceil(leads.length / pageSize))
+  const safePage = Math.min(page, totalPages)
+  const pageLeads = leads.slice((safePage - 1) * pageSize, safePage * pageSize)
 
   return (
     <div className="leads-panel">
@@ -98,7 +108,7 @@ export default function LeadTable({
             </tr>
           </thead>
           <tbody>
-            {leads.map((lead) => (
+            {pageLeads.map((lead) => (
               <tr key={lead.id}>
                 <td className="lead-name-cell">{lead.name}</td>
                 <td>
@@ -142,6 +152,41 @@ export default function LeadTable({
           </tbody>
         </table>
       </div>
+
+      {leads.length > 0 && (
+        <div className="pagination-bar">
+          <label className="pagination-page-size">
+            Show
+            <select value={pageSize} onChange={(e) => setPageSize(Number(e.target.value))}>
+              {[25, 50, 75, 100].map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
+              ))}
+            </select>
+            per page
+          </label>
+          <span className="pagination-summary">
+            {(safePage - 1) * pageSize + 1}–{Math.min(safePage * pageSize, leads.length)} of {leads.length}
+          </span>
+          <div className="pagination-controls">
+            <button type="button" className="btn-secondary" onClick={() => setPage((p) => p - 1)} disabled={safePage <= 1}>
+              Previous
+            </button>
+            <span className="pagination-page-indicator">
+              Page {safePage} of {totalPages}
+            </span>
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={() => setPage((p) => p + 1)}
+              disabled={safePage >= totalPages}
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
