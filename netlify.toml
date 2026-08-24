@@ -3,8 +3,10 @@
   publish = "dist"
   functions = "netlify/functions"
 
-[functions]
-  node_bundler = "esbuild"
+# The function (netlify/functions/api.cjs) is pre-bundled into one
+# self-contained CommonJS file by scripts/build-functions.mjs as part
+# of `npm run build`, so Netlify's own bundler has nothing left to
+# trace or resolve.
 
 [[redirects]]
   from = "/api/*"
