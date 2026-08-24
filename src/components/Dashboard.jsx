@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import StageBadge from './StageBadge'
 import ConversionTracker from './ConversionTracker'
 
-export default function Dashboard({ leads, stages }) {
+export default function Dashboard({ leads, stages, onNavigate }) {
   const stats = useMemo(() => {
     const byStage = Object.fromEntries(stages.map((s) => [s.id, 0]))
     let noReminder = 0
@@ -28,9 +28,14 @@ export default function Dashboard({ leads, stages }) {
           <div className="stat-value">{stats.total}</div>
           <div className="stat-label">Total Leads</div>
         </div>
-        <div className="stat-card">
+        <div className="stat-card stat-card-highlight">
           <div className="stat-value">{stats.todayCount}</div>
           <div className="stat-label">Today's Follow-ups</div>
+          <div className="stat-card-action">
+            <button type="button" className="btn-link" onClick={() => onNavigate('followups')}>
+              See all →
+            </button>
+          </div>
         </div>
         {stages.map((s) => (
           <div className="stat-card" key={s.id}>

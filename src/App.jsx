@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import Header from './components/Header'
+import Sidebar from './components/Sidebar'
+import Topbar from './components/Topbar'
 import Dashboard from './components/Dashboard'
 import LeadTable from './components/LeadTable'
 import PipelineBoard from './components/PipelineBoard'
@@ -76,46 +77,51 @@ function App() {
 
   return (
     <div className="app-shell">
-      <Header
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-        onAddLead={openAddForm}
-        notifyPermission={permission}
-        onEnableNotify={requestPermission}
-      />
+      <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
 
-      <main className="app-main">
-        {activeTab === 'dashboard' && <Dashboard leads={allLeads} stages={stages} />}
+      <div className="app-content">
+        <Topbar
+          activeTab={activeTab}
+          onAddLead={openAddForm}
+          notifyPermission={permission}
+          onEnableNotify={requestPermission}
+        />
 
-        {activeTab === 'leads' && (
-          <LeadTable
-            leads={filteredLeads}
-            loading={loading}
-            stages={stages}
-            filters={filters}
-            onFilterChange={setFilters}
-            onEdit={openEditForm}
-            onDelete={handleDelete}
-            onQuickUpdate={handleQuickUpdate}
-          />
-        )}
+        <main className="app-main">
+          {activeTab === 'dashboard' && (
+            <Dashboard leads={allLeads} stages={stages} onNavigate={setActiveTab} />
+          )}
 
-        {activeTab === 'pipeline' && (
-          <PipelineBoard leads={allLeads} stages={stages} onEdit={openEditForm} onMoveStage={handleMoveStage} />
-        )}
+          {activeTab === 'leads' && (
+            <LeadTable
+              leads={filteredLeads}
+              loading={loading}
+              stages={stages}
+              filters={filters}
+              onFilterChange={setFilters}
+              onEdit={openEditForm}
+              onDelete={handleDelete}
+              onQuickUpdate={handleQuickUpdate}
+            />
+          )}
 
-        {activeTab === 'followups' && <TodayFollowups stages={stages} onEdit={openEditForm} />}
+          {activeTab === 'pipeline' && (
+            <PipelineBoard leads={allLeads} stages={stages} onEdit={openEditForm} onMoveStage={handleMoveStage} />
+          )}
 
-        {activeTab === 'stages' && (
-          <StagesManager
-            stages={stages}
-            onAdd={addStage}
-            onRename={renameStage}
-            onDelete={deleteStage}
-            onReorder={reorderStages}
-          />
-        )}
-      </main>
+          {activeTab === 'followups' && <TodayFollowups stages={stages} onEdit={openEditForm} />}
+
+          {activeTab === 'stages' && (
+            <StagesManager
+              stages={stages}
+              onAdd={addStage}
+              onRename={renameStage}
+              onDelete={deleteStage}
+              onReorder={reorderStages}
+            />
+          )}
+        </main>
+      </div>
 
       {showForm && <LeadForm lead={editingLead} stages={stages} onSave={handleSave} onClose={closeForm} />}
     </div>
