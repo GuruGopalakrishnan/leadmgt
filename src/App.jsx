@@ -53,6 +53,11 @@ function App() {
     refetchAll()
   }
 
+  async function handleQuickUpdate(updatedLead) {
+    await updateLead(updatedLead.id, updatedLead)
+    refetchAll()
+  }
+
   async function handleMoveStage(leadId, stageId) {
     const lead = allLeads.find((l) => l.id === Number(leadId))
     if (!lead) return
@@ -91,6 +96,7 @@ function App() {
             onFilterChange={setFilters}
             onEdit={openEditForm}
             onDelete={handleDelete}
+            onQuickUpdate={handleQuickUpdate}
           />
         )}
 

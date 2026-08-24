@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import PhoneChips from './PhoneChips'
-import LinkChips from './LinkChips'
-import StageBadge from './StageBadge'
+import PhonesCell from './PhonesCell'
+import LinksCell from './LinksCell'
+import SourceCell from './SourceCell'
+import StageCell from './StageCell'
 import { DEFAULT_SOURCES, FOLLOWUP_FILTERS, formatReminder } from '../utils/constants'
 
-export default function LeadTable({ leads, loading, stages, filters, onFilterChange, onEdit, onDelete }) {
+export default function LeadTable({ leads, loading, stages, filters, onFilterChange, onEdit, onDelete, onQuickUpdate }) {
   const [search, setSearch] = useState(filters.search || '')
 
   function submitSearch(e) {
@@ -82,14 +83,16 @@ export default function LeadTable({ leads, loading, stages, filters, onFilterCha
               <tr key={lead.id}>
                 <td className="lead-name-cell">{lead.name}</td>
                 <td>
-                  <PhoneChips phones={lead.phones} />
+                  <PhonesCell lead={lead} onSave={onQuickUpdate} />
                 </td>
                 <td>
-                  <LinkChips links={lead.links} />
+                  <LinksCell lead={lead} onSave={onQuickUpdate} />
                 </td>
-                <td>{lead.source || <span className="muted">—</span>}</td>
                 <td>
-                  <StageBadge name={stages.find((s) => s.id === lead.stage_id)?.name} />
+                  <SourceCell lead={lead} onSave={onQuickUpdate} />
+                </td>
+                <td>
+                  <StageCell lead={lead} stages={stages} onSave={onQuickUpdate} />
                 </td>
                 <td>
                   {formatReminder(lead.reminder_date, lead.reminder_time) || <span className="muted">—</span>}
