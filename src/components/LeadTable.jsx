@@ -9,6 +9,7 @@ import { DEFAULT_SOURCES, FOLLOWUP_FILTERS } from '../utils/constants'
 
 export default function LeadTable({
   leads,
+  allLeads,
   loading,
   stages,
   filters,
@@ -27,7 +28,7 @@ export default function LeadTable({
 
   return (
     <div className="leads-panel">
-      <ImportExportBar leads={leads} onImported={onImported} />
+      <ImportExportBar allLeads={allLeads} stages={stages} onImported={onImported} />
 
       <form className="filters-bar" onSubmit={submitSearch}>
         <input

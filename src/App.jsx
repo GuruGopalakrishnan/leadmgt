@@ -110,6 +110,7 @@ function App() {
           {activeTab === 'leads' && leadsView === 'row' && (
             <LeadTable
               leads={filteredLeads}
+              allLeads={allLeads}
               loading={loading}
               stages={stages}
               filters={filters}
