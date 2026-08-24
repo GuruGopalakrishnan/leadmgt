@@ -14,6 +14,7 @@ import './App.css'
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard')
+  const [leadsView, setLeadsView] = useState('row')
   const [filters, setFilters] = useState({})
   const [editingLead, setEditingLead] = useState(null)
   const [showForm, setShowForm] = useState(false)
@@ -82,6 +83,8 @@ function App() {
       <div className="app-content">
         <Topbar
           activeTab={activeTab}
+          leadsView={leadsView}
+          onLeadsViewChange={setLeadsView}
           onAddLead={openAddForm}
           notifyPermission={permission}
           onEnableNotify={requestPermission}
@@ -92,7 +95,7 @@ function App() {
             <Dashboard leads={allLeads} stages={stages} onNavigate={setActiveTab} />
           )}
 
-          {activeTab === 'leads' && (
+          {activeTab === 'leads' && leadsView === 'row' && (
             <LeadTable
               leads={filteredLeads}
               loading={loading}
@@ -105,7 +108,7 @@ function App() {
             />
           )}
 
-          {activeTab === 'pipeline' && (
+          {activeTab === 'leads' && leadsView === 'grid' && (
             <PipelineBoard leads={allLeads} stages={stages} onEdit={openEditForm} onMoveStage={handleMoveStage} />
           )}
 

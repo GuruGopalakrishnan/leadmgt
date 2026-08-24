@@ -41,6 +41,16 @@ export function PipelineIcon() {
   )
 }
 
+export function RowsIcon() {
+  return (
+    <svg {...common}>
+      <rect x="3" y="4" width="18" height="5" rx="1.2" />
+      <rect x="3" y="10.5" width="18" height="5" rx="1.2" />
+      <rect x="3" y="17" width="18" height="3.5" rx="1.2" />
+    </svg>
+  )
+}
+
 export function FollowupsIcon() {
   return (
     <svg {...common}>
