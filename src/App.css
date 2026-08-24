@@ -591,6 +591,12 @@
   vertical-align: middle;
 }
 
+.leads-table td.improve-cell {
+  white-space: normal;
+  max-width: 280px;
+  font-size: 13px;
+}
+
 .icon-btn-sm {
   font-size: 12px;
   line-height: 1;

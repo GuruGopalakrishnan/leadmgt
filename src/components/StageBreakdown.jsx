@@ -22,15 +22,40 @@ function levelFor(percent) {
 }
 
 const HIGHLIGHTS = [
-  { match: /open/i, color: '#3b82f6' },
-  { match: /repl/i, color: '#8b5cf6' },
-  { match: /book/i, color: '#f59e0b' },
-  { match: /show/i, color: '#ec4899' },
-  { match: /client/i, color: '#10b981' },
+  {
+    match: /open/i,
+    color: '#3b82f6',
+    needsWork: 'Improve your pitch and messaging.',
+    good: 'Good pitch. Keep it up.',
+  },
+  {
+    match: /repl/i,
+    color: '#8b5cf6',
+    needsWork: 'Improve your follow-up messaging to get more replies.',
+    good: 'Strong reply rate. Keep it up.',
+  },
+  {
+    match: /book/i,
+    color: '#f59e0b',
+    needsWork: 'Your offer may not be creating enough urgency or interest — improve your pitch and offer.',
+    good: 'Strong offer. Keep it up.',
+  },
+  {
+    match: /show/i,
+    color: '#ec4899',
+    needsWork: 'Improve your follow-up process to increase show-ups.',
+    good: 'Great show-up rate. Keep it up.',
+  },
+  {
+    match: /client/i,
+    color: '#10b981',
+    needsWork: 'Improve your closing pitch to convert more meetings into clients.',
+    good: 'Excellent conversion. Keep it up.',
+  },
 ]
 
-function highlightColor(stageName) {
-  return HIGHLIGHTS.find((h) => h.match.test(stageName))?.color
+function highlightFor(stageName) {
+  return HIGHLIGHTS.find((h) => h.match.test(stageName))
 }
 
 export default function StageBreakdown({ leads, stages }) {
@@ -69,14 +94,21 @@ export default function StageBreakdown({ leads, stages }) {
             <th>Level</th>
             <th>Previous Week</th>
             <th>Change</th>
+            <th>What to Improve</th>
           </tr>
         </thead>
         <tbody>
           {rows.map((row) => {
-            const color = highlightColor(row.stage.name)
+            const highlight = highlightFor(row.stage.name)
+            const color = highlight?.color
             const style = color
               ? { background: `${color}14`, boxShadow: `inset 3px 0 0 0 ${color}` }
               : undefined
+            const improvement = highlight
+              ? row.level.label === 'Diamond'
+                ? highlight.good
+                : highlight.needsWork
+              : null
             return (
               <tr key={row.stage.id} style={style}>
                 <td className="lead-name-cell" style={color ? { color } : undefined}>
@@ -99,6 +131,9 @@ export default function StageBreakdown({ leads, stages }) {
                   {row.change > 0 && <span className="stage-change up">▲ {row.change}</span>}
                   {row.change < 0 && <span className="stage-change down">▼ {Math.abs(row.change)}</span>}
                   {row.change === 0 && <span className="muted">—</span>}
+                </td>
+                <td className="improve-cell">
+                  {improvement || <span className="muted">—</span>}
                 </td>
               </tr>
             )
