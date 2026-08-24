@@ -25,19 +25,34 @@ export function useLeads(filters) {
   }, [refetch])
 
   async function addLead(data) {
-    await api.createLead(data)
-    await refetch()
+    const created = await api.createLead(data)
+    setLeads((prev) => [created, ...prev])
+    return created
   }
 
   async function updateLead(id, data) {
-    await api.updateLead(id, data)
-    await refetch()
+    setLeads((prev) => prev.map((l) => (String(l.id) === String(id) ? { ...l, ...data } : l)))
+    try {
+      const updated = await api.updateLead(id, data)
+      setLeads((prev) => prev.map((l) => (String(l.id) === String(id) ? updated : l)))
+      return updated
+    } catch (err) {
+      setError(err.message)
+      await refetch()
+      throw err
+    }
   }
 
   async function deleteLead(id) {
-    await api.deleteLead(id)
-    await refetch()
+    setLeads((prev) => prev.filter((l) => String(l.id) !== String(id)))
+    try {
+      await api.deleteLead(id)
+    } catch (err) {
+      setError(err.message)
+      await refetch()
+      throw err
+    }
   }
 
-  return { leads, loading, error, refetch, addLead, updateLead, deleteLead }
+  return { leads, setLeads, loading, error, refetch, addLead, updateLead, deleteLead }
 }

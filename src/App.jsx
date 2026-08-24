@@ -20,7 +20,7 @@ function App() {
   const [showForm, setShowForm] = useState(false)
 
   const { stages, addStage, renameStage, deleteStage, reorderStages } = useStages()
-  const { leads: allLeads, refetch: refetchAll } = useLeads({})
+  const { leads: allLeads, setLeads: setAllLeads, refetch: refetchAll } = useLeads({})
   const {
     leads: filteredLeads,
     loading,
@@ -48,23 +48,24 @@ function App() {
 
   async function handleSave(data) {
     if (editingLead) {
-      await updateLead(editingLead.id, data)
+      const saved = await updateLead(editingLead.id, data)
+      setAllLeads((prev) => prev.map((l) => (l.id === saved.id ? saved : l)))
     } else {
-      await addLead(data)
+      const created = await addLead(data)
+      setAllLeads((prev) => [created, ...prev])
     }
-    refetchAll()
     closeForm()
   }
 
   async function handleDelete(id) {
     if (!confirm('Delete this lead?')) return
     await deleteLead(id)
-    refetchAll()
+    setAllLeads((prev) => prev.filter((l) => String(l.id) !== String(id)))
   }
 
   async function handleQuickUpdate(updatedLead) {
-    await updateLead(updatedLead.id, updatedLead)
-    refetchAll()
+    const saved = await updateLead(updatedLead.id, updatedLead)
+    setAllLeads((prev) => prev.map((l) => (l.id === saved.id ? saved : l)))
   }
 
   function handleImported() {
@@ -75,17 +76,19 @@ function App() {
   async function handleMoveStage(leadId, stageId) {
     const lead = allLeads.find((l) => l.id === Number(leadId))
     if (!lead) return
-    await updateLead(leadId, {
+    const saved = await updateLead(leadId, {
       name: lead.name,
       source: lead.source,
+      niche: lead.niche,
       stage_id: stageId,
       reminder_date: lead.reminder_date,
       reminder_time: lead.reminder_time,
       reminder_note: lead.reminder_note,
       phones: lead.phones,
+      emails: lead.emails,
       links: lead.links,
     })
-    refetchAll()
+    setAllLeads((prev) => prev.map((l) => (l.id === saved.id ? saved : l)))
   }
 
   return (

@@ -24,6 +24,17 @@ export default function LeadTable({
   const [search, setSearch] = useState(filters.search || '')
   const [pageSize, setPageSize] = useState(25)
   const [page, setPage] = useState(1)
+  const [copiedId, setCopiedId] = useState(null)
+
+  async function copyName(lead) {
+    try {
+      await navigator.clipboard.writeText(lead.name)
+    } catch {
+      // clipboard permission denied — nothing to fall back to here
+    }
+    setCopiedId(lead.id)
+    setTimeout(() => setCopiedId((current) => (current === lead.id ? null : current)), 1200)
+  }
 
   function submitSearch(e) {
     e.preventDefault()
@@ -110,7 +121,11 @@ export default function LeadTable({
           <tbody>
             {pageLeads.map((lead) => (
               <tr key={lead.id}>
-                <td className="lead-name-cell">{lead.name}</td>
+                <td className="lead-name-cell">
+                  <button type="button" className="copyable-name" onClick={() => copyName(lead)} title="Copy name">
+                    {copiedId === lead.id ? 'Copied ✓' : lead.name}
+                  </button>
+                </td>
                 <td>
                   <PhonesCell lead={lead} onSave={onQuickUpdate} />
                 </td>
