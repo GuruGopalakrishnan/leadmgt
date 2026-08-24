@@ -49,7 +49,6 @@ export default function ConversionTracker({ leads, stages }) {
                 <div className="funnel-card">
                   <div className="funnel-value">{card.value.toLocaleString()}</div>
                   <div className="funnel-label">{card.label}</div>
-                  {card.stageName && <div className="funnel-substage">at/after "{card.stageName}"</div>}
                   {i > 0 && (
                     <div className="funnel-pct">
                       <span className="funnel-pct-total">{pct(card.value, cards[0].value)} of total</span>

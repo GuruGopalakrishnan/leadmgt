@@ -452,12 +452,6 @@
   font-weight: 500;
 }
 
-.funnel-substage {
-  font-size: 10.5px;
-  margin-top: 2px;
-  opacity: 0.7;
-}
-
 .funnel-pct {
   display: flex;
   flex-direction: column;
