@@ -13,4 +13,7 @@ await build({
   target: 'node18',
   format: 'cjs',
   logLevel: 'info',
+  // Optional native addons `ws` tries for a perf boost; not installed,
+  // and `ws` falls back to pure JS without them at runtime.
+  external: ['bufferutil', 'utf-8-validate'],
 })

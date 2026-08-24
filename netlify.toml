@@ -8,6 +8,12 @@
 # of `npm run build`, so Netlify's own bundler has nothing left to
 # trace or resolve.
 
+[functions]
+  # @libsql/client pulls in ws, which optionally requires these native
+  # addons for a perf boost and falls back to pure JS without them.
+  # We never install them; tell Netlify's packager not to chase them.
+  external_node_modules = ["bufferutil", "utf-8-validate"]
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/api/:splat"

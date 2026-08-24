@@ -19,6 +19,9 @@ netlify/functions/api.cjs
 server/*.db
 server/*.db-shm
 server/*.db-wal
+/leadmgt.db
+/leadmgt.db-shm
+/leadmgt.db-wal
 
 # Editor directories and files
 .vscode/*
