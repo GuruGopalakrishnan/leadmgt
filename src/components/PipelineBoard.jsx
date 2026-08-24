@@ -1,33 +1,33 @@
 import { useState } from 'react'
-import { STATUSES } from '../utils/constants'
+import PhoneChips from './PhoneChips'
 
-export default function PipelineBoard({ leads, onEdit, onSetStatus }) {
-  const [dragOverStatus, setDragOverStatus] = useState(null)
+export default function PipelineBoard({ leads, stages, onEdit, onMoveStage }) {
+  const [dragOverStage, setDragOverStage] = useState(null)
 
-  function handleDrop(e, status) {
+  function handleDrop(e, stageId) {
     e.preventDefault()
-    const id = e.dataTransfer.getData('text/lead-id')
-    if (id) onSetStatus(id, status)
-    setDragOverStatus(null)
+    const leadId = e.dataTransfer.getData('text/lead-id')
+    if (leadId) onMoveStage(leadId, stageId)
+    setDragOverStage(null)
   }
 
   return (
-    <div className="pipeline-board">
-      {STATUSES.map((status) => {
-        const columnLeads = leads.filter((lead) => lead.status === status)
+    <div className="pipeline-board" style={{ gridTemplateColumns: `repeat(${stages.length}, minmax(220px, 1fr))` }}>
+      {stages.map((stage) => {
+        const columnLeads = leads.filter((lead) => lead.stage_id === stage.id)
         return (
           <div
-            key={status}
-            className={`pipeline-column${dragOverStatus === status ? ' drag-over' : ''}`}
+            key={stage.id}
+            className={`pipeline-column${dragOverStage === stage.id ? ' drag-over' : ''}`}
             onDragOver={(e) => {
               e.preventDefault()
-              setDragOverStatus(status)
+              setDragOverStage(stage.id)
             }}
-            onDragLeave={() => setDragOverStatus(null)}
-            onDrop={(e) => handleDrop(e, status)}
+            onDragLeave={() => setDragOverStage(null)}
+            onDrop={(e) => handleDrop(e, stage.id)}
           >
             <div className="pipeline-column-header">
-              <span>{status}</span>
+              <span>{stage.name}</span>
               <span className="pipeline-count">{columnLeads.length}</span>
             </div>
             <div className="pipeline-cards">
@@ -40,8 +40,10 @@ export default function PipelineBoard({ leads, onEdit, onSetStatus }) {
                   onClick={() => onEdit(lead)}
                 >
                   <div className="pipeline-card-name">{lead.name}</div>
-                  {lead.company && <div className="pipeline-card-company">{lead.company}</div>}
-                  <div className="pipeline-card-source">{lead.source}</div>
+                  {lead.source && <div className="pipeline-card-company">{lead.source}</div>}
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <PhoneChips phones={lead.phones} />
+                  </div>
                 </div>
               ))}
               {columnLeads.length === 0 && <div className="pipeline-empty">Drop leads here</div>}

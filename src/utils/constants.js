@@ -1,18 +1,25 @@
-export const STATUSES = ['New', 'Contacted', 'Qualified', 'Won', 'Lost']
+export const DEFAULT_SOURCES = ['Google GMB', 'BNI', 'Udemy', 'Website', 'Instagram', 'LinkedIn']
 
-export const STATUS_COLORS = {
-  New: '#3b82f6',
-  Contacted: '#f59e0b',
-  Qualified: '#a855f7',
-  Won: '#22c55e',
-  Lost: '#6b7280',
+export const LINK_TYPES = ['Website', 'LinkedIn', 'Instagram', 'Other']
+
+export const FOLLOWUP_FILTERS = [
+  { value: '', label: 'All' },
+  { value: 'today', label: 'Today' },
+  { value: 'overdue', label: 'Overdue' },
+  { value: 'upcoming', label: 'Upcoming' },
+  { value: 'none', label: 'No reminder' },
+]
+
+export function waLink(number) {
+  const digits = number.replace(/[^\d]/g, '')
+  return `https://wa.me/${digits}`
 }
 
-export const SOURCES = [
-  'Website',
-  'Referral',
-  'Cold Call',
-  'Social Media',
-  'Event',
-  'Other',
-]
+export function formatReminder(date, time) {
+  if (!date) return null
+  const d = new Date(`${date}T${time || '00:00'}`)
+  const dateStr = d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })
+  if (!time) return dateStr
+  const timeStr = d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })
+  return `${dateStr} – ${timeStr}`
+}

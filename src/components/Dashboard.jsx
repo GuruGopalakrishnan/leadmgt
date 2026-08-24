@@ -1,25 +1,22 @@
 import { useMemo } from 'react'
-import StatusBadge from './StatusBadge'
-import { STATUSES } from '../utils/constants'
+import StageBadge from './StageBadge'
 
-export default function Dashboard({ leads }) {
+export default function Dashboard({ leads, stages }) {
   const stats = useMemo(() => {
-    const byStatus = Object.fromEntries(STATUSES.map((s) => [s, 0]))
+    const byStage = Object.fromEntries(stages.map((s) => [s.id, 0]))
+    let noReminder = 0
+    let todayCount = 0
+    const today = new Date().toISOString().slice(0, 10)
     for (const lead of leads) {
-      if (byStatus[lead.status] !== undefined) byStatus[lead.status] += 1
+      if (lead.stage_id != null && byStage[lead.stage_id] !== undefined) byStage[lead.stage_id] += 1
+      if (!lead.reminder_date) noReminder += 1
+      if (lead.reminder_date === today) todayCount += 1
     }
-    const total = leads.length
-    const won = byStatus.Won || 0
-    const closed = won + (byStatus.Lost || 0)
-    const conversionRate = closed > 0 ? Math.round((won / closed) * 100) : 0
-    return { byStatus, total, conversionRate }
-  }, [leads])
+    return { byStage, noReminder, todayCount, total: leads.length }
+  }, [leads, stages])
 
   const recent = useMemo(
-    () =>
-      [...leads]
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        .slice(0, 5),
+    () => [...leads].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 5),
     [leads],
   )
 
@@ -30,16 +27,16 @@ export default function Dashboard({ leads }) {
           <div className="stat-value">{stats.total}</div>
           <div className="stat-label">Total Leads</div>
         </div>
-        {STATUSES.map((status) => (
-          <div className="stat-card" key={status}>
-            <div className="stat-value">{stats.byStatus[status]}</div>
-            <div className="stat-label">{status}</div>
+        <div className="stat-card">
+          <div className="stat-value">{stats.todayCount}</div>
+          <div className="stat-label">Today's Follow-ups</div>
+        </div>
+        {stages.map((s) => (
+          <div className="stat-card" key={s.id}>
+            <div className="stat-value">{stats.byStage[s.id] || 0}</div>
+            <div className="stat-label">{s.name}</div>
           </div>
         ))}
-        <div className="stat-card">
-          <div className="stat-value">{stats.conversionRate}%</div>
-          <div className="stat-label">Win Rate</div>
-        </div>
       </div>
 
       <div className="dashboard-recent">
@@ -52,9 +49,9 @@ export default function Dashboard({ leads }) {
               <li key={lead.id} className="recent-item">
                 <div>
                   <div className="recent-name">{lead.name}</div>
-                  <div className="recent-company">{lead.company}</div>
+                  <div className="recent-company">{lead.source}</div>
                 </div>
-                <StatusBadge status={lead.status} />
+                <StageBadge name={stages.find((s) => s.id === lead.stage_id)?.name} />
               </li>
             ))}
           </ul>

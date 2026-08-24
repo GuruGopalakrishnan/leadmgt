@@ -114,9 +114,9 @@
   padding: 0 4px;
 }
 
-/* Status badge */
+/* Stage badge */
 
-.status-badge {
+.stage-badge {
   display: inline-block;
   font-size: 13px;
   font-weight: 500;
@@ -124,6 +124,55 @@
   border-radius: 999px;
   border: 1px solid;
   white-space: nowrap;
+}
+
+.stage-badge-empty {
+  color: var(--text);
+  background: var(--code-bg);
+  border-color: var(--border);
+}
+
+.muted {
+  color: var(--text);
+  opacity: 0.6;
+}
+
+/* Chips (phone / link) */
+
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.phone-chip,
+.link-chip {
+  font-size: 13px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.phone-chip {
+  color: #16a34a;
+  background: #16a34a1a;
+  border-color: #16a34a55;
+}
+
+.phone-chip:hover {
+  border-color: #16a34a;
+}
+
+.link-chip {
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-color: var(--accent-border);
+}
+
+.link-chip:hover {
+  opacity: 0.85;
 }
 
 /* Dashboard */
@@ -218,7 +267,9 @@
 .filters-bar select,
 .lead-form input,
 .lead-form select,
-.lead-form textarea {
+.lead-form textarea,
+.stages-add-form input,
+.stages-edit-input {
   font: inherit;
   font-size: 15px;
   padding: 8px 10px;
@@ -258,9 +309,10 @@
   border-top: 1px solid var(--border);
 }
 
-.leads-table td:first-child {
+.lead-name-cell {
   color: var(--text-h);
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .no-results {
@@ -346,6 +398,150 @@
   color: #ef4444;
   font-size: 14px;
   margin: 0;
+}
+
+.form-fieldset {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-fieldset legend {
+  font-size: 13px;
+  color: var(--text);
+  padding: 0 4px;
+}
+
+.dynamic-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.dynamic-row input,
+.dynamic-row select {
+  flex: 1;
+}
+
+.dynamic-row select {
+  flex: 0 0 130px;
+}
+
+/* Today's Follow-ups */
+
+.followups-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 640px;
+}
+
+.followup-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+
+.followup-card:hover {
+  box-shadow: var(--shadow);
+}
+
+.followup-time {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--accent);
+  min-width: 64px;
+}
+
+.followup-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.followup-name {
+  font-weight: 500;
+  color: var(--text-h);
+}
+
+.followup-note {
+  font-size: 13px;
+}
+
+/* Stages manager */
+
+.stages-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 520px;
+}
+
+.stages-hint {
+  font-size: 14px;
+}
+
+.stages-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.stages-list-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+}
+
+.stages-list-item + .stages-list-item {
+  border-top: 1px solid var(--border);
+}
+
+.stages-reorder {
+  display: flex;
+  flex-direction: column;
+}
+
+.stages-reorder .btn-icon {
+  font-size: 14px;
+  padding: 0 4px;
+}
+
+.stages-reorder .btn-icon:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.stages-name {
+  flex: 1;
+  color: var(--text-h);
+  cursor: text;
+}
+
+.stages-edit-input {
+  flex: 1;
+}
+
+.stages-add-form {
+  display: flex;
+  gap: 10px;
+}
+
+.stages-add-form input {
+  flex: 1;
 }
 
 /* Pipeline board */

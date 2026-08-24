@@ -1,72 +1,43 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { api } from '../api/client'
 
-const STORAGE_KEY = 'leadmgt.leads'
+export function useLeads(filters) {
+  const [leads, setLeads] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
 
-function loadLeads() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    return raw ? JSON.parse(raw) : []
-  } catch {
-    return []
-  }
-}
-
-function makeId() {
-  return crypto.randomUUID()
-}
-
-export function useLeads() {
-  const [leads, setLeads] = useState(loadLeads)
+  const filtersKey = JSON.stringify(filters)
+  const refetch = useCallback(async () => {
+    setLoading(true)
+    try {
+      const data = await api.getLeads(JSON.parse(filtersKey))
+      setLeads(data)
+      setError('')
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }, [filtersKey])
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(leads))
-  }, [leads])
+    refetch()
+  }, [refetch])
 
-  function addLead(data) {
-    const now = new Date().toISOString()
-    const lead = {
-      id: makeId(),
-      status: 'New',
-      createdAt: now,
-      updatedAt: now,
-      ...data,
-    }
-    setLeads((prev) => [lead, ...prev])
-    return lead
+  async function addLead(data) {
+    await api.createLead(data)
+    await refetch()
   }
 
-  function updateLead(id, data) {
-    setLeads((prev) =>
-      prev.map((lead) =>
-        lead.id === id
-          ? { ...lead, ...data, updatedAt: new Date().toISOString() }
-          : lead,
-      ),
-    )
+  async function updateLead(id, data) {
+    await api.updateLead(id, data)
+    await refetch()
   }
 
-  function deleteLead(id) {
-    setLeads((prev) => prev.filter((lead) => lead.id !== id))
+  async function deleteLead(id) {
+    await api.deleteLead(id)
+    await refetch()
   }
 
-  function setStatus(id, status) {
-    updateLead(id, { status })
-  }
-
-  function loadSampleData() {
-    const samples = [
-      { name: 'Ava Thompson', company: 'Northwind Traders', email: 'ava@northwind.com', phone: '555-0101', source: 'Website', status: 'New', notes: 'Downloaded pricing sheet.' },
-      { name: 'Marcus Lee', company: 'Contoso Ltd', email: 'marcus@contoso.com', phone: '555-0142', source: 'Referral', status: 'Contacted', notes: 'Referred by existing customer.' },
-      { name: 'Priya Nair', company: 'Globex Corp', email: 'priya@globex.com', phone: '555-0198', source: 'Event', status: 'Qualified', notes: 'Met at trade show, budget confirmed.' },
-      { name: 'Diego Alvarez', company: 'Initech', email: 'diego@initech.com', phone: '555-0175', source: 'Cold Call', status: 'Won', notes: 'Signed annual contract.' },
-      { name: 'Sofia Rossi', company: 'Umbrella Inc', email: 'sofia@umbrella.com', phone: '555-0133', source: 'Social Media', status: 'Lost', notes: 'Went with a competitor.' },
-    ]
-    const now = new Date().toISOString()
-    setLeads((prev) => [
-      ...samples.map((s) => ({ id: makeId(), createdAt: now, updatedAt: now, ...s })),
-      ...prev,
-    ])
-  }
-
-  return { leads, addLead, updateLead, deleteLead, setStatus, loadSampleData }
+  return { leads, loading, error, refetch, addLead, updateLead, deleteLead }
 }

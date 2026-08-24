@@ -3,15 +3,24 @@ import Header from './components/Header'
 import Dashboard from './components/Dashboard'
 import LeadTable from './components/LeadTable'
 import PipelineBoard from './components/PipelineBoard'
+import TodayFollowups from './components/TodayFollowups'
+import StagesManager from './components/StagesManager'
 import LeadForm from './components/LeadForm'
 import { useLeads } from './hooks/useLeads'
+import { useStages } from './hooks/useStages'
+import { useReminderNotifications } from './hooks/useReminderNotifications'
 import './App.css'
 
 function App() {
-  const { leads, addLead, updateLead, deleteLead, setStatus, loadSampleData } = useLeads()
   const [activeTab, setActiveTab] = useState('dashboard')
+  const [filters, setFilters] = useState({})
   const [editingLead, setEditingLead] = useState(null)
   const [showForm, setShowForm] = useState(false)
+
+  const { stages, addStage, renameStage, deleteStage, reorderStages } = useStages()
+  const { leads: allLeads, refetch: refetchAll } = useLeads({})
+  const { leads: filteredLeads, loading, addLead, updateLead, deleteLead } = useLeads(filters)
+  const { permission, requestPermission } = useReminderNotifications()
 
   function openAddForm() {
     setEditingLead(null)
@@ -28,41 +37,81 @@ function App() {
     setEditingLead(null)
   }
 
-  function handleSave(data) {
+  async function handleSave(data) {
     if (editingLead) {
-      updateLead(editingLead.id, data)
+      await updateLead(editingLead.id, data)
     } else {
-      addLead(data)
+      await addLead(data)
     }
+    refetchAll()
     closeForm()
   }
 
-  function handleDelete(id) {
-    if (confirm('Delete this lead?')) deleteLead(id)
+  async function handleDelete(id) {
+    if (!confirm('Delete this lead?')) return
+    await deleteLead(id)
+    refetchAll()
+  }
+
+  async function handleMoveStage(leadId, stageId) {
+    const lead = allLeads.find((l) => l.id === Number(leadId))
+    if (!lead) return
+    await updateLead(leadId, {
+      name: lead.name,
+      source: lead.source,
+      stage_id: stageId,
+      reminder_date: lead.reminder_date,
+      reminder_time: lead.reminder_time,
+      reminder_note: lead.reminder_note,
+      phones: lead.phones,
+      links: lead.links,
+    })
+    refetchAll()
   }
 
   return (
     <div className="app-shell">
-      <Header activeTab={activeTab} onTabChange={setActiveTab} onAddLead={openAddForm} />
+      <Header
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        onAddLead={openAddForm}
+        notifyPermission={permission}
+        onEnableNotify={requestPermission}
+      />
 
       <main className="app-main">
-        {activeTab === 'dashboard' && <Dashboard leads={leads} />}
+        {activeTab === 'dashboard' && <Dashboard leads={allLeads} stages={stages} />}
+
         {activeTab === 'leads' && (
           <LeadTable
-            leads={leads}
+            leads={filteredLeads}
+            loading={loading}
+            stages={stages}
+            filters={filters}
+            onFilterChange={setFilters}
             onEdit={openEditForm}
             onDelete={handleDelete}
-            onLoadSample={loadSampleData}
           />
         )}
+
         {activeTab === 'pipeline' && (
-          <PipelineBoard leads={leads} onEdit={openEditForm} onSetStatus={setStatus} />
+          <PipelineBoard leads={allLeads} stages={stages} onEdit={openEditForm} onMoveStage={handleMoveStage} />
+        )}
+
+        {activeTab === 'followups' && <TodayFollowups stages={stages} onEdit={openEditForm} />}
+
+        {activeTab === 'stages' && (
+          <StagesManager
+            stages={stages}
+            onAdd={addStage}
+            onRename={renameStage}
+            onDelete={deleteStage}
+            onReorder={reorderStages}
+          />
         )}
       </main>
 
-      {showForm && (
-        <LeadForm lead={editingLead} onSave={handleSave} onClose={closeForm} />
-      )}
+      {showForm && <LeadForm lead={editingLead} stages={stages} onSave={handleSave} onClose={closeForm} />}
     </div>
   )
 }
