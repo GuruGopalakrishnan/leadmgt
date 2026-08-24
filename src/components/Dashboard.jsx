@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 import ConversionTracker from './ConversionTracker'
 import StageBreakdown from './StageBreakdown'
-import NicheBreakdown from './NicheBreakdown'
 
 export default function Dashboard({ leads, stages, onNavigate }) {
   const stats = useMemo(() => {
@@ -31,15 +30,9 @@ export default function Dashboard({ leads, stages, onNavigate }) {
         </div>
       </div>
 
-      <div className="dashboard-columns">
-        <div className="dashboard-section">
-          <h2>Stage Breakdown</h2>
-          <StageBreakdown leads={leads} stages={stages} />
-        </div>
-        <div className="dashboard-section">
-          <h2>Niche / Industry Performance</h2>
-          <NicheBreakdown leads={leads} stages={stages} />
-        </div>
+      <div className="dashboard-section">
+        <h2>Stage Breakdown</h2>
+        <StageBreakdown leads={leads} stages={stages} />
       </div>
 
       <ConversionTracker leads={leads} stages={stages} />
