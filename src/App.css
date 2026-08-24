@@ -322,7 +322,7 @@
 
 .stat-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(160px, 220px));
   gap: 12px;
 }
 
@@ -359,6 +359,18 @@
 
 .stat-card-action {
   margin-top: 10px;
+}
+
+.dashboard-section h2 {
+  margin: 0 0 14px;
+  font-size: 16px;
+}
+
+.stage-change {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-h);
+  font-variant-numeric: tabular-nums;
 }
 
 .empty-hint {

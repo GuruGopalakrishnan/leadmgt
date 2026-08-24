@@ -18,6 +18,7 @@ export const api = {
     return request(`/leads${suffix}`)
   },
   getDueLeads: () => request('/leads/due/now'),
+  getStageDistributionAt: (daysAgo) => request(`/leads/stage-distribution/at?daysAgo=${daysAgo}`),
   createLead: (data) => request('/leads', { method: 'POST', body: JSON.stringify(data) }),
   updateLead: (id, data) => request(`/leads/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   deleteLead: (id) => request(`/leads/${id}`, { method: 'DELETE' }),

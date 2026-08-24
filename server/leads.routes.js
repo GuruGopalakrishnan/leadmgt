@@ -12,6 +12,14 @@ function todayParts() {
   return { date, time }
 }
 
+function logStageChange(leadId, stageId, at) {
+  db.prepare('INSERT INTO stage_history (lead_id, stage_id, changed_at) VALUES (?, ?, ?)').run(
+    leadId,
+    stageId,
+    at,
+  )
+}
+
 function attachPhonesAndLinks(lead) {
   lead.phones = db
     .prepare('SELECT id, number FROM phones WHERE lead_id = ? ORDER BY id')
@@ -78,6 +86,34 @@ router.get('/due/now', (req, res) => {
   res.json(due.map(attachPhonesAndLinks))
 })
 
+router.get('/stage-distribution/at', (req, res) => {
+  const daysAgo = Number(req.query.daysAgo) || 7
+  const asOf = new Date(Date.now() - daysAgo * 86400000).toISOString()
+
+  const rows = db
+    .prepare(
+      `SELECT h.stage_id AS stage_id, COUNT(*) AS count
+       FROM stage_history h
+       INNER JOIN (
+         SELECT lead_id, MAX(changed_at) AS max_changed_at
+         FROM stage_history
+         WHERE changed_at <= ?
+         GROUP BY lead_id
+       ) latest ON h.lead_id = latest.lead_id AND h.changed_at = latest.max_changed_at
+       GROUP BY h.stage_id`,
+    )
+    .all(asOf)
+
+  const byStage = {}
+  let total = 0
+  for (const row of rows) {
+    if (row.stage_id !== null) byStage[row.stage_id] = row.count
+    total += row.count
+  }
+
+  res.json({ asOf, total, byStage })
+})
+
 router.get('/:id', (req, res) => {
   const lead = db.prepare('SELECT * FROM leads WHERE id = ?').get(req.params.id)
   if (!lead) return res.status(404).json({ error: 'Lead not found.' })
@@ -110,6 +146,7 @@ router.post('/', (req, res) => {
     .run(name.trim(), source || null, stage_id || null, reminder_date || null, reminder_time || null, reminder_note || null, now, now)
 
   saveContacts(info.lastInsertRowid, phones, links)
+  logStageChange(info.lastInsertRowid, stage_id || null, now)
   const lead = db.prepare('SELECT * FROM leads WHERE id = ?').get(info.lastInsertRowid)
   res.status(201).json(attachPhonesAndLinks(lead))
 })
@@ -124,6 +161,8 @@ router.put('/:id', (req, res) => {
   const reminderChanged =
     reminder_date !== existing.reminder_date || reminder_time !== existing.reminder_time
   const notified = reminderChanged ? 0 : existing.reminder_notified
+  const newStageId = stage_id || null
+  const now = new Date().toISOString()
 
   db.prepare(
     `UPDATE leads SET name = ?, source = ?, stage_id = ?, reminder_date = ?, reminder_time = ?, reminder_note = ?, reminder_notified = ?, updated_at = ?
@@ -131,14 +170,18 @@ router.put('/:id', (req, res) => {
   ).run(
     name.trim(),
     source || null,
-    stage_id || null,
+    newStageId,
     reminder_date || null,
     reminder_time || null,
     reminder_note || null,
     notified,
-    new Date().toISOString(),
+    now,
     req.params.id,
   )
+
+  if (newStageId !== existing.stage_id) {
+    logStageChange(req.params.id, newStageId, now)
+  }
 
   saveContacts(req.params.id, phones, links)
   const lead = db.prepare('SELECT * FROM leads WHERE id = ?').get(req.params.id)

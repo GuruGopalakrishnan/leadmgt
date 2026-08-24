@@ -40,6 +40,15 @@ db.exec(`
     type TEXT NOT NULL,
     url TEXT NOT NULL
   );
+
+  CREATE TABLE IF NOT EXISTS stage_history (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    lead_id INTEGER NOT NULL REFERENCES leads(id) ON DELETE CASCADE,
+    stage_id INTEGER REFERENCES stages(id) ON DELETE SET NULL,
+    changed_at TEXT NOT NULL
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_stage_history_lead ON stage_history(lead_id, changed_at);
 `)
 
 const stageCount = db.prepare('SELECT COUNT(*) AS n FROM stages').get().n
