@@ -11,8 +11,11 @@ export default function Sidebar({ activeTab, onTabChange }) {
   return (
     <aside className="sidebar">
       <div className="sidebar-brand">
-        <span className="sidebar-logo">D</span>
-        <span className="sidebar-wordmark">DAS</span>
+        <span className="brand-wordmark">DAS</span>
+        <svg className="brand-underline" viewBox="0 0 120 16" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M2 14 Q60 -6 118 14" fill="none" stroke="currentColor" strokeWidth="1" />
+        </svg>
+        <span className="brand-tagline">Deploy &amp; Scale</span>
       </div>
 
       <nav className="sidebar-nav">
