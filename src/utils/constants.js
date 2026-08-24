@@ -10,11 +10,6 @@ export const FOLLOWUP_FILTERS = [
   { value: 'none', label: 'No reminder' },
 ]
 
-export function waLink(number) {
-  const digits = number.replace(/[^\d]/g, '')
-  return `https://wa.me/${digits}`
-}
-
 export function formatReminder(date, time) {
   if (!date) return null
   const d = new Date(`${date}T${time || '00:00'}`)

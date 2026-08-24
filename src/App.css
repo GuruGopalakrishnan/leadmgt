@@ -372,21 +372,6 @@
   margin: 0;
 }
 
-.whatsapp-dialog {
-  max-width: 380px;
-}
-
-.whatsapp-dialog-body {
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.whatsapp-dialog-body p {
-  font-size: 15px;
-}
-
 .lead-form {
   padding: 20px;
   display: flex;

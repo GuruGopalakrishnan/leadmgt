@@ -82,7 +82,7 @@ export default function LeadTable({ leads, loading, stages, filters, onFilterCha
               <tr key={lead.id}>
                 <td className="lead-name-cell">{lead.name}</td>
                 <td>
-                  <PhoneChips phones={lead.phones} leadName={lead.name} />
+                  <PhoneChips phones={lead.phones} />
                 </td>
                 <td>
                   <LinkChips links={lead.links} />

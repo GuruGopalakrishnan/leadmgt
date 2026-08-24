@@ -30,7 +30,7 @@ export default function TodayFollowups({ stages, onEdit }) {
             <div className="followup-name">{lead.name}</div>
             {lead.reminder_note && <div className="followup-note">{lead.reminder_note}</div>}
             <div onClick={(e) => e.stopPropagation()}>
-              <PhoneChips phones={lead.phones} leadName={lead.name} />
+              <PhoneChips phones={lead.phones} />
             </div>
           </div>
           <StageBadge name={stages.find((s) => s.id === lead.stage_id)?.name} />
