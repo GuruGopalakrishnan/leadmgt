@@ -42,7 +42,7 @@ export default function PipelineBoard({ leads, stages, onEdit, onMoveStage }) {
                   <div className="pipeline-card-name">{lead.name}</div>
                   {lead.source && <div className="pipeline-card-company">{lead.source}</div>}
                   <div onClick={(e) => e.stopPropagation()}>
-                    <PhoneChips phones={lead.phones} />
+                    <PhoneChips phones={lead.phones} leadName={lead.name} />
                   </div>
                 </div>
               ))}
