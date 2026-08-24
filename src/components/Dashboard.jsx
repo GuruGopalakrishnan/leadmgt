@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import StageBadge from './StageBadge'
+import ConversionTracker from './ConversionTracker'
 
 export default function Dashboard({ leads, stages }) {
   const stats = useMemo(() => {
@@ -57,6 +58,8 @@ export default function Dashboard({ leads, stages }) {
           </ul>
         )}
       </div>
+
+      <ConversionTracker leads={leads} stages={stages} />
     </div>
   )
 }
