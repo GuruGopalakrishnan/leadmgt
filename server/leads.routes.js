@@ -3,7 +3,21 @@ import db from './db.js'
 
 const router = Router()
 
-const DEFAULT_SOURCES = ['Google GMB', 'BNI', 'Udemy', 'Website', 'Instagram', 'LinkedIn']
+const DEFAULT_SOURCES = [
+  'Google GMB',
+  'BNI',
+  'Udemy',
+  'Website',
+  'Instagram',
+  'LinkedIn',
+  'ICF',
+  'Facebook Group',
+  'LinkedIn Group',
+  'Boolean - Insta',
+  'Boolean - Facebook',
+  'Boolean - LinkedIn',
+  'Boolean - SERP',
+]
 
 function todayParts() {
   const now = new Date()

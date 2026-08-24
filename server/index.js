@@ -13,7 +13,21 @@ app.use('/api/leads', leadsRouter)
 app.use('/api/stages', stagesRouter)
 
 app.get('/api/sources', (req, res) => {
-  res.json(['Google GMB', 'BNI', 'Udemy', 'Website', 'Instagram', 'LinkedIn'])
+  res.json([
+    'Google GMB',
+    'BNI',
+    'Udemy',
+    'Website',
+    'Instagram',
+    'LinkedIn',
+    'ICF',
+    'Facebook Group',
+    'LinkedIn Group',
+    'Boolean - Insta',
+    'Boolean - Facebook',
+    'Boolean - LinkedIn',
+    'Boolean - SERP',
+  ])
 })
 
 app.listen(PORT, () => {
