@@ -163,7 +163,7 @@ async function saveContacts(executor, leadId, phones, emails, links) {
 }
 
 router.post('/', async (req, res) => {
-  const { name, source, niche, stage_id, reminder_date, reminder_time, reminder_note, phones, emails, links } = req.body
+  const { name, source, niche, stage_id, reminder_date, reminder_time, reminder_note, phones, emails, links, created_at } = req.body
   if (!name || !name.trim()) return res.status(400).json({ error: 'Name is required.' })
 
   const now = new Date().toISOString()
@@ -178,7 +178,7 @@ router.post('/', async (req, res) => {
       reminder_date || null,
       reminder_time || null,
       reminder_note || null,
-      now,
+      created_at || now,
       now,
     ],
   })
@@ -231,7 +231,7 @@ router.put('/:id', async (req, res) => {
   const existing = (await db.execute({ sql: 'SELECT * FROM leads WHERE id = ?', args: [req.params.id] })).rows[0]
   if (!existing) return res.status(404).json({ error: 'Lead not found.' })
 
-  const { name, source, niche, stage_id, reminder_date, reminder_time, reminder_note, phones, emails, links } = req.body
+  const { name, source, niche, stage_id, reminder_date, reminder_time, reminder_note, phones, emails, links, created_at } = req.body
   if (!name || !name.trim()) return res.status(400).json({ error: 'Name is required.' })
 
   const reminderChanged =
@@ -241,7 +241,7 @@ router.put('/:id', async (req, res) => {
   const now = new Date().toISOString()
 
   await db.execute({
-    sql: `UPDATE leads SET name = ?, source = ?, niche = ?, stage_id = ?, reminder_date = ?, reminder_time = ?, reminder_note = ?, reminder_notified = ?, updated_at = ?
+    sql: `UPDATE leads SET name = ?, source = ?, niche = ?, stage_id = ?, reminder_date = ?, reminder_time = ?, reminder_note = ?, reminder_notified = ?, created_at = ?, updated_at = ?
           WHERE id = ?`,
     args: [
       name.trim(),
@@ -252,6 +252,7 @@ router.put('/:id', async (req, res) => {
       reminder_time || null,
       reminder_note || null,
       notified,
+      created_at || existing.created_at,
       now,
       req.params.id,
     ],
