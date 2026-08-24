@@ -1,14 +1,17 @@
-import Database from 'better-sqlite3'
+import { createClient } from '@libsql/client'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const db = new Database(path.join(__dirname, 'leadmgt.db'))
 
-db.pragma('journal_mode = WAL')
-db.pragma('foreign_keys = ON')
+const url = process.env.TURSO_DATABASE_URL || `file:${path.join(__dirname, 'leadmgt.db')}`
+const authToken = process.env.TURSO_AUTH_TOKEN
 
-db.exec(`
+const db = createClient(authToken ? { url, authToken } : { url })
+
+await db.execute('PRAGMA foreign_keys = ON')
+
+await db.executeMultiple(`
   CREATE TABLE IF NOT EXISTS stages (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL UNIQUE,
@@ -51,14 +54,16 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_stage_history_lead ON stage_history(lead_id, changed_at);
 `)
 
-const stageCount = db.prepare('SELECT COUNT(*) AS n FROM stages').get().n
+const stageCount = (await db.execute('SELECT COUNT(*) AS n FROM stages')).rows[0].n
 if (stageCount === 0) {
-  const insertStage = db.prepare('INSERT INTO stages (name, position) VALUES (?, ?)')
   const defaults = ['First Message Sent', 'Follow-up', 'Interested', 'Meeting', 'Won', 'Lost']
-  const insertMany = db.transaction((names) => {
-    names.forEach((name, i) => insertStage.run(name, i))
-  })
-  insertMany(defaults)
+  await db.batch(
+    defaults.map((name, i) => ({
+      sql: 'INSERT INTO stages (name, position) VALUES (?, ?)',
+      args: [name, i],
+    })),
+    'write',
+  )
 }
 
 export default db
