@@ -42,15 +42,27 @@ function cellToLinks(cell) {
     })
 }
 
+function normalizedPhone(phone) {
+  return phone.replace(/\D/g, '')
+}
+
+function dedupeKey(row) {
+  const phone = row.phones.map(normalizedPhone).find(Boolean)
+  if (phone) return `phone:${phone}`
+  const email = row.emails.find(Boolean)
+  if (email) return `email:${email.trim().toLowerCase()}`
+  return `name:${row.name.trim().toLowerCase()}`
+}
+
 export default function ImportPreviewModal({ headerRow, dataRows, onCancel, onConfirm }) {
   const [columnMap, setColumnMap] = useState(() =>
     Object.fromEntries(TARGET_FIELDS.map((f) => [f.key, guessColumn(headerRow, f.guesses)])),
   )
   const [importing, setImporting] = useState(false)
 
-  const mappedRows = useMemo(() => {
+  const { mappedRows, duplicateCount } = useMemo(() => {
     const idx = (key) => (columnMap[key] === '' ? -1 : Number(columnMap[key]))
-    return dataRows.map((row) => ({
+    const allRows = dataRows.map((row) => ({
       name: idx('name') !== -1 ? (row[idx('name')] || '').trim() : '',
       phones: idx('phone') !== -1 ? cellToPhones(row[idx('phone')]) : [],
       emails: idx('email') !== -1 ? cellToEmails(row[idx('email')]) : [],
@@ -58,6 +70,24 @@ export default function ImportPreviewModal({ headerRow, dataRows, onCancel, onCo
       niche: idx('niche') !== -1 ? row[idx('niche')] || null : null,
       source: idx('source') !== -1 ? row[idx('source')] || null : null,
     }))
+
+    const seen = new Set()
+    const unique = []
+    let duplicates = 0
+    for (const row of allRows) {
+      if (!row.name) {
+        unique.push(row)
+        continue
+      }
+      const key = dedupeKey(row)
+      if (seen.has(key)) {
+        duplicates += 1
+        continue
+      }
+      seen.add(key)
+      unique.push(row)
+    }
+    return { mappedRows: unique, duplicateCount: duplicates }
   }, [dataRows, columnMap])
 
   const validCount = mappedRows.filter((r) => r.name).length
@@ -143,6 +173,7 @@ export default function ImportPreviewModal({ headerRow, dataRows, onCancel, onCo
             <span>
               contact{validCount === 1 ? '' : 's'} will be imported
               {skippedCount > 0 && ` · ${skippedCount} skipped (no name)`}
+              {duplicateCount > 0 && ` · ${duplicateCount} duplicate${duplicateCount === 1 ? '' : 's'} removed`}
             </span>
           </div>
 
