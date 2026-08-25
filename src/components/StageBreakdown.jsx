@@ -25,32 +25,52 @@ const HIGHLIGHTS = [
   {
     match: /open/i,
     color: '#3b82f6',
-    needsWork: 'Improve your pitch and messaging.',
-    good: 'Good pitch. Keep it up.',
+    messages: {
+      Bronze: 'Improve your pitch and messaging.',
+      Silver: 'Open rate is picking up — keep sharpening your opening line.',
+      Gold: 'Good open rate. Keep it up.',
+      Diamond: 'Excellent open rate. Keep it up.',
+    },
   },
   {
     match: /repl/i,
     color: '#8b5cf6',
-    needsWork: 'Improve your follow-up messaging to get more replies.',
-    good: 'Strong reply rate. Keep it up.',
+    messages: {
+      Bronze: 'Improve your follow-up messaging to get more replies.',
+      Silver: 'Replies are improving — keep following up consistently.',
+      Gold: 'Good reply rate. Keep it up.',
+      Diamond: 'Strong reply rate. Keep it up.',
+    },
   },
   {
     match: /book/i,
     color: '#f59e0b',
-    needsWork: 'Your offer may not be creating enough urgency or interest — improve your pitch and offer.',
-    good: 'Strong offer. Keep it up.',
+    messages: {
+      Bronze: 'Your offer may not be creating enough urgency or interest — improve your pitch and offer.',
+      Silver: 'Bookings are improving — tighten your call-to-action.',
+      Gold: 'Good booking rate. Keep it up.',
+      Diamond: 'Strong offer. Keep it up.',
+    },
   },
   {
     match: /show/i,
     color: '#ec4899',
-    needsWork: 'Improve your follow-up process to increase show-ups.',
-    good: 'Great show-up rate. Keep it up.',
+    messages: {
+      Bronze: 'Improve your follow-up process to increase show-ups.',
+      Silver: 'Show-ups are improving — send reminders before the call.',
+      Gold: 'Good show-up rate. Keep it up.',
+      Diamond: 'Great show-up rate. Keep it up.',
+    },
   },
   {
     match: /client/i,
     color: '#10b981',
-    needsWork: 'Improve your closing pitch to convert more meetings into clients.',
-    good: 'Excellent conversion. Keep it up.',
+    messages: {
+      Bronze: 'Improve your closing pitch to convert more meetings into clients.',
+      Silver: 'Conversions are improving — refine your closing pitch.',
+      Gold: 'Good conversion rate. Keep it up.',
+      Diamond: 'Excellent conversion. Keep it up.',
+    },
   },
 ]
 
@@ -104,11 +124,7 @@ export default function StageBreakdown({ leads, stages }) {
             const style = color
               ? { background: `${color}14`, boxShadow: `inset 3px 0 0 0 ${color}` }
               : undefined
-            const improvement = highlight
-              ? row.level.label === 'Diamond'
-                ? highlight.good
-                : highlight.needsWork
-              : null
+            const improvement = highlight ? highlight.messages[row.level.label] : null
             return (
               <tr key={row.stage.id} style={style}>
                 <td className="lead-name-cell" style={color ? { color } : undefined}>
