@@ -12,6 +12,7 @@ export const DEFAULT_SOURCES = [
   'Boolean - Facebook',
   'Boolean - LinkedIn',
   'Boolean - SERP',
+  'Ads Library',
 ]
 
 export const LINK_TYPES = ['Website', 'LinkedIn', 'Instagram', 'Other']

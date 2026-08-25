@@ -31,6 +31,7 @@ app.get('/api/sources', (req, res) => {
     'Boolean - Facebook',
     'Boolean - LinkedIn',
     'Boolean - SERP',
+    'Ads Library',
   ])
 })
 

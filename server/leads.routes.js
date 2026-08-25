@@ -17,6 +17,7 @@ const DEFAULT_SOURCES = [
   'Boolean - Facebook',
   'Boolean - LinkedIn',
   'Boolean - SERP',
+  'Ads Library',
 ]
 
 function todayParts() {
