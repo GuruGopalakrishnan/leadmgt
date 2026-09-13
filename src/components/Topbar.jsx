@@ -4,6 +4,7 @@ const TITLES = {
   dashboard: 'Dashboard',
   leads: 'Leads',
   followups: "Today's Follow-ups",
+  journey: 'Journey Tracking',
   stages: 'Stages',
 }
 

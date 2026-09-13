@@ -5,6 +5,7 @@ import Dashboard from './components/Dashboard'
 import LeadTable from './components/LeadTable'
 import PipelineBoard from './components/PipelineBoard'
 import TodayFollowups from './components/TodayFollowups'
+import JourneyDashboard from './components/JourneyDashboard'
 import StagesManager from './components/StagesManager'
 import LeadForm from './components/LeadForm'
 import { useLeads } from './hooks/useLeads'
@@ -130,6 +131,8 @@ function App() {
           )}
 
           {activeTab === 'followups' && <TodayFollowups stages={stages} onEdit={openEditForm} />}
+
+          {activeTab === 'journey' && <JourneyDashboard />}
 
           {activeTab === 'stages' && (
             <StagesManager

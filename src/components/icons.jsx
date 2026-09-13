@@ -70,6 +70,14 @@ export function StagesIcon() {
   )
 }
 
+export function JourneyIcon() {
+  return (
+    <svg {...common}>
+      <path d="M3 12h4l2.5 6L13 6l2.5 6H21" />
+    </svg>
+  )
+}
+
 export function BellIcon() {
   return (
     <svg {...common}>

@@ -1,9 +1,10 @@
-import { DashboardIcon, LeadsIcon, FollowupsIcon, StagesIcon } from './icons'
+import { DashboardIcon, LeadsIcon, FollowupsIcon, StagesIcon, JourneyIcon } from './icons'
 
 const NAV_ITEMS = [
   { id: 'dashboard', label: 'Dashboard', Icon: DashboardIcon },
   { id: 'leads', label: 'Leads', Icon: LeadsIcon },
   { id: 'followups', label: 'Follow-ups', Icon: FollowupsIcon },
+  { id: 'journey', label: 'Journey', Icon: JourneyIcon },
   { id: 'stages', label: 'Stages', Icon: StagesIcon },
 ]
 
