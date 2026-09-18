@@ -79,6 +79,32 @@ async function init() {
     );
 
     CREATE INDEX IF NOT EXISTS idx_stage_history_lead ON stage_history(lead_id, changed_at);
+
+    CREATE TABLE IF NOT EXISTS events (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      event_id TEXT NOT NULL UNIQUE,
+      visitor_id TEXT NOT NULL,
+      session_id TEXT NOT NULL,
+      event_name TEXT NOT NULL,
+      page_url TEXT,
+      referrer TEXT,
+      utm_source TEXT,
+      utm_medium TEXT,
+      utm_campaign TEXT,
+      device TEXT,
+      name TEXT,
+      phone TEXT,
+      email TEXT,
+      fbp TEXT,
+      fbc TEXT,
+      lead_id INTEGER REFERENCES leads(id) ON DELETE SET NULL,
+      capi_status TEXT,
+      capi_reason TEXT,
+      created_at TEXT NOT NULL
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_events_created ON events(created_at);
+    CREATE INDEX IF NOT EXISTS idx_events_visitor ON events(visitor_id, created_at);
   `)
 
   try {
